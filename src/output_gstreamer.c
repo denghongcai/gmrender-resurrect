@@ -545,8 +545,10 @@ static int output_gstreamer_init(void)
 	if (initial_db < 0) {
 		output_gstreamer_set_volume(exp(initial_db / 20 * log(10)));
 	}
-	// file a new latency event
-	ev = gst_event_new_latency(1000);
+	// Set a latency
+	g_object_set(G_OBJECT(player_), "latency-time", (gint64)100, NULL);
+	g_object_set(G_OBJECT(player_), "buffer-time", (gint64)200, NULL);
+	g_object_set(G_OBJECT(player_), "sync", FALSE, NULL);
 
 	return 0;
 }
