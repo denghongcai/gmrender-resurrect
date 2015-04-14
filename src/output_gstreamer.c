@@ -365,6 +365,11 @@ static gboolean my_bus_callback(GstBus * bus, GstMessage * msg,
 	case GST_MESSAGE_BUFFERING:
 		/* not caring about these right now */
 		break;
+	case GST_MESSAGE_LATENCY:
+		GstClockTime latency;
+		gst_event_parse_latency(msg, &latency);
+		Log_info("gstreamer", "latency: %lf", latency);
+		break;
 	default:
 		/*
 		g_print("GStreamer: %s: unhandled message type %d (%s)\n",
@@ -489,6 +494,7 @@ static void prepare_next_stream(GstElement *obj, gpointer userdata) {
 static int output_gstreamer_init(void)
 {
 	GstBus *bus;
+	GstEvent *ev;
 
 	SongMetaData_init(&song_meta_);
 	scan_mime_list();
@@ -539,6 +545,8 @@ static int output_gstreamer_init(void)
 	if (initial_db < 0) {
 		output_gstreamer_set_volume(exp(initial_db / 20 * log(10)));
 	}
+	// file a new latency event
+	ev = gst_event_new_latency(1000);
 
 	return 0;
 }
