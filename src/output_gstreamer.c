@@ -11,7 +11,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * GMediaRender is distributed in the hope that it will be useful,
+ * GMediaRender is distribiuted in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
@@ -366,9 +366,6 @@ static gboolean my_bus_callback(GstBus * bus, GstMessage * msg,
 		/* not caring about these right now */
 		break;
 	case GST_MESSAGE_LATENCY:
-		GstClockTime latency;
-		gst_event_parse_latency(msg, &latency);
-		Log_info("gstreamer", "latency: %lf", latency);
 		break;
 	default:
 		/*
@@ -494,7 +491,6 @@ static void prepare_next_stream(GstElement *obj, gpointer userdata) {
 static int output_gstreamer_init(void)
 {
 	GstBus *bus;
-	GstEvent *ev;
 
 	SongMetaData_init(&song_meta_);
 	scan_mime_list();
@@ -546,8 +542,8 @@ static int output_gstreamer_init(void)
 		output_gstreamer_set_volume(exp(initial_db / 20 * log(10)));
 	}
 	// Set a latency
-	g_object_set(G_OBJECT(player_), "latency-time", (gint64)100, NULL);
-	g_object_set(G_OBJECT(player_), "buffer-time", (gint64)200, NULL);
+	g_object_set(G_OBJECT(player_), "latency-time", (gint64)1, NULL);
+	g_object_set(G_OBJECT(player_), "buffer-time", (gint64)2, NULL);
 	g_object_set(G_OBJECT(player_), "sync", FALSE, NULL);
 
 	return 0;
